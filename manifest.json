@@ -1,6 +1,6 @@
 {
-    "id": "auto-collapse-folders",
-    "name": "Auto Collapse Folders",
+    "id": "auto-collapse-inactive-folders",
+    "name": "Auto Collapse Inactive Folders",
     "version": "1.0.0",
     "minAppVersion": "1.0.0",
     "description": "Automatically collapse all folders except the one containing the active file.",
@@ -8,5 +8,6 @@
     "authorUrl": "https://github.com/SomehowItWorks",
     "isDesktopOnly": true
 }
+
 
 
