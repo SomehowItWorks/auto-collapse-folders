@@ -5,6 +5,7 @@
     "minAppVersion": "1.0.0",
     "description": "Automatically collapse all folders except the one containing the active file.",
     "author": "SomehowItWorks",
-    "isDesktopOnly": false
+    "isDesktopOnly": true
 
 }
+
