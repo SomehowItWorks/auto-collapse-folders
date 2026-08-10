@@ -26,7 +26,7 @@ class AutoCollapsePlugin extends obsidian.Plugin {
         }
     }
 
-    async processPendingCollapses() {
+    processPendingCollapses() {
         this.isCollapsing = true;
 
         try {
@@ -38,14 +38,14 @@ class AutoCollapsePlugin extends obsidian.Plugin {
 
                 // Mark this first: setCollapsed can synchronously emit file-open again.
                 this.lastActivePath = activeFile.path;
-                await this.collapseOtherFolders(activeFile);
+                this.collapseOtherFolders(activeFile);
             }
         } finally {
             this.isCollapsing = false;
         }
     }
 
-    async collapseOtherFolders(activeFile) {
+    collapseOtherFolders(activeFile) {
         if (!activeFile) return;
 
         // 获取文件列表视图
@@ -57,10 +57,10 @@ class AutoCollapsePlugin extends obsidian.Plugin {
         if (!fileItems) return;
 
         // 获取当前文件所有的父级文件夹路径
-        const parentPaths = [];
+        const parentPaths = new Set();
         let currentParent = activeFile.parent;
         while (currentParent) {
-            parentPaths.push(currentParent.path);
+            parentPaths.add(currentParent.path);
             currentParent = currentParent.parent;
         }
 
@@ -70,13 +70,10 @@ class AutoCollapsePlugin extends obsidian.Plugin {
 
             // 检查是否为文件夹项且不是根目录
             if (item.setCollapsed && path !== "/") {
-                // 如果当前路径不在活跃文件的父路径列表中，则折叠
-                // 否则保持展开（让用户能看到当前文件在哪个位置）
-                const shouldBeOpen = parentPaths.includes(path);
-
-                // 仅在状态不一致时调用，减少 UI 刷新压力
-                if (item.collapsed !== !shouldBeOpen) {
-                    await item.setCollapsed(!shouldBeOpen);
+                // Obsidian reveals the active file itself. Do not fight that behavior
+                // by expanding ancestors; only collapse folders outside that path.
+                if (!parentPaths.has(path) && !item.collapsed) {
+                    item.setCollapsed(true);
                 }
             }
         }
